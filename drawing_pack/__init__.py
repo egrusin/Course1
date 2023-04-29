@@ -1,3 +1,2 @@
-from ..core_pack import *
-
+from .calculate import DrawData
 
