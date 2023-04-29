@@ -23,8 +23,7 @@ defaults_draw = {'d, мм': 20,
 
 
 def main():
-    print(drawing_pack.DrawData(defaults_draw).S)
-    print(0.15 * (47 - 20))
+    pass
 
 
 if __name__ == '__main__':

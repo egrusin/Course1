@@ -1,3 +1,6 @@
+__all__ = ['DrawData']
+
+
 class DrawData:
     """Класс для рассчета недостающих параметров подшипника"""
     def __init__(self, data: dict) -> None:
