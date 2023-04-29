@@ -1,5 +1,5 @@
-import window_pack
-import drawing_pack  # Импортируем все пакеты
+import window_pack as wp
+import drawing_pack as dp # Импортируем все пакеты
 
 
 defaults_calc = {'Частота вращения вала, об/мин, n': 1444.5,      # Данные из таблицы 3.1
@@ -23,7 +23,9 @@ defaults_draw = {'d, мм': 20,
 
 
 def main():
-    pass
+    win = wp.CustomWin()
+    win.customize()
+    win()
 
 
 if __name__ == '__main__':
