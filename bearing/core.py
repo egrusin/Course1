@@ -28,7 +28,8 @@ class LabelWin(CoreWin):
     def __init__(self) -> None:
         super().__init__()
         self.entries_draw = {}
-        self.answer = None
+        self.entries_calc = {}
+        self.answers = {}
 
     def add_data_field(self, entry_name: str, label_start: str, label_end: str, position: tuple, dx: int) -> None:
         """Метод для добавления в окно поля вида F = |0.034  |, мм"""
@@ -38,34 +39,78 @@ class LabelWin(CoreWin):
         self.entries_draw[entry_name] = entry
         tk.Label(self.main_win, text=f', {label_end}').place(x=position[0] + dx * 2.5, y=position[1])
 
+    def add_calc_field(self, entry_name: str, label_start: str, label_end: str, position: tuple, dx: int) -> None:
+        """Метод для добавления в окно поля вида F = |0.034  |, мм"""
+        tk.Label(self.main_win, text=f'{label_start} =').place(x=position[0], y=position[1])
+        entry = tk.Entry(self.main_win, width=6)
+        entry.place(x=position[0] + dx, y=position[1])
+        self.entries_calc[entry_name] = entry
+        tk.Label(self.main_win, text=f'{label_end}').place(x=position[0] + dx * 2.5, y=position[1])
+
+    def add_answer_field(self, entry_name: str, label_start: str, label_end: str, position: tuple, dx: int) -> None:
+        """Метод для добавления в окно поля вида F = |0.034  |, мм"""
+        tk.Label(self.main_win, text=f'{label_start} =').place(x=position[0], y=position[1])
+        entry = tk.Entry(self.main_win, width=9)
+        entry.place(x=position[0] + dx, y=position[1])
+        self.answers[entry_name] = entry
+        tk.Label(self.main_win, text=f'{label_end}').place(x=position[0] + dx * 3.5, y=position[1])
+
     def add_label_field(self, label_text: str, position: tuple, size: int) -> None:
         """Метод для добавления в окно поля вида 'Начертить подшипник'"""
         tk.Label(self.main_win, text=f'{label_text}', font=('Arial', size)).place(x=position[0], y=position[1])
 
-    def add_answer_field(self, position: tuple, size: int) -> None:
-        entry = tk.Entry(self.main_win, width=size)
-        entry.place(x=position[0] + dx, y=position[1])
-        self.answer = entry
-
 
 class ButtonWin(CoreWin):
     """Класс для добавления в окно именованных кнопок"""
+    def __init__(self, data, calc):
+        super().__init__()
+        self.data = data
+        self.calc = calc
+
     def add_button(self, but_text: str, but_func, position: tuple, size: int) -> None:
         """Метод для добавления в окно кнопки вида |Начертить подшипник|"""
         tk.Button(self.main_win, text=f'{but_text}', command=but_func, width=size).place(x=position[0], y=position[1])
 
-    def draw_with(self, draw_class) -> None:
-        draw_class(self)
+    def set_data(self) -> None:
+        """Метод для подстановки в окна значений по умолчанию из переменной data. Перед постановкой данные удаляются"""
+        for i in self.entries_draw:
+            self.entries_draw.get(i).delete(0, tk.END)
+            value = self.data.base_data.get(i)
+            self.entries_draw[i].insert(-1, value)
+            self.data[i] = value
 
-    def set_data(self, data, fields: dict) -> None:
-        """Переписать для variable"""                           # !!!!
-        for i in fields:
-            fields.get(i).insert(-1, getattr(data, i))
+    def set_calc(self) -> None:
+        """Метод для подстановки в окна значений по умолчанию из переменной calc. Перед постановкой данные удаляются"""
+        for i in self.entries_calc:
+            self.entries_calc.get(i).delete(0, tk.END)
+            value = self.calc.base_data.get(i)
+            self.entries_calc[i].insert(-1, value)
+            self.calc[i] = value
+
+    def get_calc(self) -> None:
+        for i in self.entries_calc:
+            val = self.entries_calc.get(i).get()
+            self.calc[i] = val
+        print(self.calc.data)
+        P = self.calc.get_P()
+        self.answers.get('P').delete(0, tk.END)
+        self.answers.get('P').insert(-1, P)
+        L = self.calc.get_L()
+        self.answers.get('L').delete(0, tk.END)
+        self.answers.get('L').insert(-1, L)
+
 
 
 class DrawWin(CoreWin):
     """Класс для рисования чертежа"""
-    def draw_line(self, *args, size: int=2) -> None:
+    def __init__(self):
+        super().__init__()
+        self.canvas = tk.Canvas(bg="white", width=800, height=600)
+        self.canvas.place(x=395, y=0)
+
+    def draw_line(self, *args, size=2) -> None:
         """Метод для рисования ломаной линии толщины size по координатам args"""
-        canvas = tk.Canvas(self.main_win)
-        canvas.create_line(*args, width=size)
+        self.canvas.create_line(*args, width=size)
+
+    def draw_rect(self, *args, size=2) -> None:
+        self.canvas.create_rectangle(*args, width=size)
