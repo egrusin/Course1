@@ -20,11 +20,10 @@ defaults_draw = {'d': 20,                              # Данные из та�
 def main(draw_data, calc_data):
     data = DrawData(draw_data)
     calc = CalcData(calc_data)
-    coords = DrawCoords(data)
-    win = MyWin(data, calc)
-    get_window(win)
-    draw_plases(win, coords)
 
+    win = MyWin(data, calc)
+    draw_plases(win)
+    get_window(win, data)
     win()
 
 

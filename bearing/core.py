@@ -53,7 +53,7 @@ class LabelWin(CoreWin):
         entry = tk.Entry(self.main_win, width=9)
         entry.place(x=position[0] + dx, y=position[1])
         self.answers[entry_name] = entry
-        tk.Label(self.main_win, text=f'{label_end}').place(x=position[0] + dx * 3.5, y=position[1])
+        tk.Label(self.main_win, text=f'{label_end}').place(x=position[0] + dx * 3, y=position[1])
 
     def add_label_field(self, label_text: str, position: tuple, size: int) -> None:
         """Метод для добавления в окно поля вида 'Начертить подшипник'"""
@@ -88,17 +88,16 @@ class ButtonWin(CoreWin):
             self.calc[i] = value
 
     def get_calc(self) -> None:
+        """Метод для подстановки в окна значений L и P по расчетам класса CalcData"""
         for i in self.entries_calc:
             val = self.entries_calc.get(i).get()
             self.calc[i] = val
-        print(self.calc.data)
         P = self.calc.get_P()
         self.answers.get('P').delete(0, tk.END)
         self.answers.get('P').insert(-1, P)
         L = self.calc.get_L()
         self.answers.get('L').delete(0, tk.END)
         self.answers.get('L').insert(-1, L)
-
 
 
 class DrawWin(CoreWin):
@@ -113,4 +112,17 @@ class DrawWin(CoreWin):
         self.canvas.create_line(*args, width=size)
 
     def draw_rect(self, *args, size=2) -> None:
+        """Метод для рисования прямоугольника толщины size по координатам args"""
         self.canvas.create_rectangle(*args, width=size)
+
+    def draw_circle(self, *args, size=2) -> None:
+        """Метод для рисования окружности толщины size по координатам args"""
+        self.canvas.create_oval(*args, width=size, fill='white')
+
+    def clear_place(self, *args, size=2):
+        """Метод для удаления чертежа"""
+        self.canvas.create_rectangle(*args, width=size, fill='white')
+
+    def draw_polygon(self, *args, size=2, fill=True):
+        """Метод для рисования окружности толщины size по координатам args"""
+        self.canvas.create_polygon(*args, width=size, fill='white')
