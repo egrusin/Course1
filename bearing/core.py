@@ -123,6 +123,6 @@ class DrawWin(CoreWin):
         """Метод для удаления чертежа"""
         self.canvas.create_rectangle(*args, width=size, fill='white')
 
-    def draw_polygon(self, *args, size=2, fill=True):
+    def draw_polygon(self, *args, size=3, fill=True):
         """Метод для рисования окружности толщины size по координатам args"""
         self.canvas.create_polygon(*args, width=size, fill='white')

@@ -196,7 +196,7 @@ class DrawCoords:
             if self['S'] - self['r'] < i < self['S'] + self['r']:
                 x2 = left_up_x + (i - (self['S'] - self['r'])) / 2
                 y2 = left_up_y + self['S'] - self['r'] + (i - (self['S'] - self['r'])) / 2
-            elif i < self['S'] - self['r']:
+            elif i <= self['S'] - self['r']:
                 x2 = left_up_x
                 y2 = left_up_y + i
             else:
@@ -218,7 +218,7 @@ class DrawCoords:
             if self['B'] - self['r'] < i < self['B'] + self['r']:
                 x1 = right_up_x - self['r'] + (i - (self['B'] - self['r'])) / 2
                 y1 = left_up_y + (i - (self['B'] - self['r'])) / 2
-            elif i < self['B'] - self['r']:
+            elif i <= self['B'] - self['r']:
                 x1 = left_up_x + i
                 y1 = left_up_y
             else:
@@ -232,6 +232,85 @@ class DrawCoords:
                 y2 = left_up_y + self['S']
             ans.append((x1, y1, x2, y2))
         return ans
+
+    def fill_up_rotor(self, space=10):
+        """Метод для получения координат штрихующих линий верхней части ротора"""
+        cent = self.get_center()
+        down_lines = self.get_upinner_lines()[4:]
+        left_down_x = cent[0] - 0.5 * self['B']
+        left_down_y = cent[1] - self['D'] // 2 + self['S']
+        right_down_x = cent[0] + 0.5 * self['B']
+        right_down_y = cent[1] - self['D'] // 2 + self['S']
+        k = (down_lines[1] - down_lines[3]) / (down_lines[0] - down_lines[2])
+        b = down_lines[3] - down_lines[2] * k
+        ans = []
+        for i in range(0, int(self['S'] + self['B'] - self['r']), space):
+            if i <= self['S'] - self['r']:
+                x1 = left_down_x
+                y1 = left_down_y - i
+            elif self['S'] - self['r'] < i < self['S'] + self['r']:
+                x1 = left_down_x + (i - (self['S'] - self['r'])) / 2
+                y1 = left_down_y - (self['S'] - self['r']) - (i - (self['S'] - self['r'])) / 2
+            else:
+                x1 = left_down_x + i - self['S']
+                y1 = left_down_y - self['S']
+            if i < 0.65 * self['B']:
+                x2 = left_down_x + i
+                y2 = left_down_y
+            elif 0.65 * self['B'] <= i <= self['B'] + 0.5 * self['S']:
+                my_k = abs(k)
+                my_b = left_down_y - down_lines[3]
+                s = i - 0.65 * self['B']
+                dx = (s - my_b) / (my_k + 1)
+                add = int(dx) if dx - int(dx) < 0.5 else int(dx) + 1
+                x2 = left_down_x + 0.65 * self['B'] + add
+                y2 = k * x2 + b
+            else:
+                x2 = right_down_x
+                y2 = right_down_y - 0.5 * self['S'] - (i - self['B'] - 0.5 * self['S'])
+            ans.append((x1, y1, x2, y2))
+        return ans
+
+    def fill_down_rotor(self, space=10):
+        """Метод для получения координат штрихующих линий нижней части ротора"""
+        cent = self.get_center()
+        up_lines = self.get_downinner_lines()[4:]
+        left_down_x = cent[0] - 0.5 * self['B']
+        left_down_y = cent[1] + self['D'] // 2
+        right_down_x = cent[0] + 0.5 * self['B']
+        right_down_y = cent[1] + self['D'] // 2
+        k = (up_lines[1] - up_lines[3]) / (up_lines[0] - up_lines[2])
+        b = up_lines[3] - up_lines[2] * k
+        start = int(self['r']) if self['r'] - int(self['r']) < 0.5 else int(self['r']) + 1
+        ans = []
+        for i in range(start, int(self['S'] + self['B']), space):
+            if i <= self['S']:
+                x1 = left_down_x
+                y1 = left_down_y - i
+            elif self['S'] < i < self['S'] + 0.5 * self['B']:
+                x1 = left_down_x - self['S'] + i
+                y1 = left_down_y - self['S']
+            else:
+                x1 = left_down_x + i - self['S']
+                y1 = left_down_y - self['S']
+            if i < self['B'] - self['r']:
+                x2 = left_down_x + i
+                y2 = left_down_y
+            elif self['B'] - self['r'] <= i <= self['B'] + self['r']:
+                x2 = left_down_x + (self['B'] - self['r']) + (i - (self['B'] - self['r'])) / 2
+                y2 = left_down_y - (i - (self['B'] - self['r'])) / 2
+            else:
+                x2 = right_down_x
+                y2 = right_down_y - 0.5 * self['S'] - (i - self['B'] - 0.5 * self['S'])
+            ans.append((x1, y1, x2, y2))
+        return ans
+
+    def get_ficha(self):
+        cent = self.get_center()
+        up_lines = self.get_downinner_lines()[4:]
+        y = cent[1] + self['d'] // 2 + self['S']
+        side = (cent[0], y, cent[0] + 0.5 * self['B'], y)
+        return up_lines + side
 
     def __getitem__(self, item):
         return float(self.data[item])

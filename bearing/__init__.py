@@ -58,6 +58,13 @@ def create_draw(win: MyWin, data):
         win.draw_line(*down_lines[:4], size=3)
         win.draw_line(*down_lines[4:], size=3)
         # Штрихуем ротор
+        up_out_fill = coords.fill_up_rotor()      # Верхняя часть
+        for i in up_out_fill:
+            win.draw_line(*i, size=1)
+        down_out_fill = coords.fill_down_rotor()  # Нижняя часть
+        for i in down_out_fill:
+            win.draw_line(*i, size=1)
+        # win.draw_polygon(*coords.get_ficha(), size=5)
         # Рисуем подшипники
         up_cir = coords.get_upcircle_params()
         win.draw_circle(*up_cir, size=3)
