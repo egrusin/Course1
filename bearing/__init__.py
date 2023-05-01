@@ -40,9 +40,16 @@ def create_draw(win: MyWin, data):
         win.draw_line(in_cil[2] + coords['r'], in_cil[3] - coords['r'], in_cil[2] , in_cil[3], size=3)
         win.draw_line(in_cil[4] + coords['r'], in_cil[5] + coords['r'], in_cil[4], in_cil[5], size=3)
         win.draw_line(in_cil[6] - coords['r'], in_cil[7] + coords['r'], in_cil[6], in_cil[7], size=3)
-        # Рисуем цилиндр до шариков
+        # Рисуем цилиндр до шариков, статор
         big_cil = coords.get_big_cilinder()
         win.draw_line(*(big_cil + big_cil[:2]), size=3)
+        # Штрихуем статор
+        up_in_fill = coords.fill_up_stator()      # Верхняя часть
+        for i in up_in_fill:
+            win.draw_line(*i, size=1)
+        down_in_fill = coords.fill_down_stator()  # Нижняя часть
+        for i in down_in_fill:
+            win.draw_line(*i, size=1)
         # Рисуем внутреннюю для подшипника сторону
         up_lines = coords.get_upinner_lines()
         win.draw_line(*up_lines[:4], size=3)
@@ -50,6 +57,7 @@ def create_draw(win: MyWin, data):
         down_lines = coords.get_downinner_lines()
         win.draw_line(*down_lines[:4], size=3)
         win.draw_line(*down_lines[4:], size=3)
+        # Штрихуем ротор
         # Рисуем подшипники
         up_cir = coords.get_upcircle_params()
         win.draw_circle(*up_cir, size=3)
@@ -61,7 +69,7 @@ def create_draw(win: MyWin, data):
 
 def get_window(win, data: DrawData):
     win.customize('Расчет подшипника на долговечность', (1200, 600))
-
+    # Поля для черчения
     win.add_label_field('Начертить подшипник', (15, 10), 10)
     win.add_data_field('d', 'd', 'мм', (30, 50), 30)
     win.add_data_field('D', 'D', 'мм', (30, 80), 30)
@@ -70,7 +78,7 @@ def get_window(win, data: DrawData):
 
     win.add_button('Значения по умолчанию', win.set_data, (10, 350), 20)
     win.add_button('Начертить подшипник', create_draw(win, data), (10, 380), 20)
-
+    # Поля для расчета
     win.add_label_field('Рассчитать подшипник', (200, 10), 10)
     win.add_calc_field('C', 'C', ', кН', (220, 50), 30)
     win.add_calc_field('p', 'p', '', (220, 80), 30)
@@ -86,8 +94,3 @@ def get_window(win, data: DrawData):
     win.add_button('Рассчитать подшипник', win.get_calc, (200, 380), 20)
     win.add_answer_field('P', 'P', ', кН', (220, 410), 30)
     win.add_answer_field('L', 'L', ', млн об.', (220, 440), 30)
-
-
-
-
-
