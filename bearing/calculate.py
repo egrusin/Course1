@@ -280,20 +280,26 @@ class DrawCoords:
         right_down_x = cent[0] + 0.5 * self['B']
         right_down_y = cent[1] + self['D'] // 2
         k = (up_lines[1] - up_lines[3]) / (up_lines[0] - up_lines[2])
-        b = up_lines[3] - up_lines[2] * k
+        b = up_lines[3] - k * up_lines[2]
+        b = up_lines[3] - (right_down_y - self['S'])
+        print(b)
         start = int(self['r']) if self['r'] - int(self['r']) < 0.5 else int(self['r']) + 1
         ans = []
-        for i in range(start, int(self['S'] + self['B']), space):
-            if i <= self['S']:
+        for i in range(start, int(self['S'] + self['B'] - self['r']), space):
+            dot = up_lines[2] - b / k
+            print(left_down_x, dot, cent[0], up_lines[2])
+            if i <= self['S']:                                       # Верхняя граница
                 x1 = left_down_x
                 y1 = left_down_y - i
-            elif self['S'] < i < self['S'] + 0.5 * self['B']:
+            elif self['S'] < i <= dot - (left_down_x - self['S']) + self['S']:
                 x1 = left_down_x - self['S'] + i
                 y1 = left_down_y - self['S']
             else:
-                x1 = left_down_x + i - self['S']
-                y1 = left_down_y - self['S']
-            if i < self['B'] - self['r']:
+                # x1 = left_down_x + (i - self['S'])
+                # y1 = left_down_y - self['S']
+                x1 = dot + i + (k * i + b) / (1 - k)
+                y1 = left_down_y - self['S'] + x1 * k + b
+            if i < self['B'] - self['r']:                            # Нижняя граница
                 x2 = left_down_x + i
                 y2 = left_down_y
             elif self['B'] - self['r'] <= i <= self['B'] + self['r']:
