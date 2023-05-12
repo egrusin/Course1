@@ -11,7 +11,7 @@ def draw_plases(win) -> None:
     win.draw_rect(405, 5, 795, 595)
 
 
-def create_draw(win: MyWin, data):
+def create_draw(win: MyWin, data, im):
     def inner():
         left_angle = (5, 5)
         size = (390, 590)
@@ -24,6 +24,7 @@ def create_draw(win: MyWin, data):
         center = coords.get_center()
         # Очищаем место
         win.clear_place(5, 5, 395, 595)
+        win.clear_place(405, 5, 795, 595)
         # Рисуем внешний контур
         out_fig = coords.get_outer_polygon()
         win.draw_line(*(out_fig + out_fig[:2]), size=3)
@@ -64,17 +65,21 @@ def create_draw(win: MyWin, data):
         down_out_fill = coords.fill_down_rotor()  # Нижняя часть
         for i in down_out_fill:
             win.draw_line(*i, size=1)
-        # win.draw_polygon(*coords.get_ficha(), size=5)
+        win.draw_polygon(*coords.get_ficha(), size=5)
         # Рисуем подшипники
         up_cir = coords.get_upcircle_params()
         win.draw_circle(*up_cir, size=3)
         down_cir = coords.get_downcircle_params()
         win.draw_circle(*down_cir, size=3)
-
+        # Рисуем осевые линии
+        win.draw_line(center[0], center[1] - coords['D'] // 2 - coords['r'],
+                      center[0], center[1] + coords['D'] // 2 + coords['r'])
+        # Добавляем 3d чертеж
+        win.draw_3d(405, 5, im)
     return inner
 
 
-def get_window(win, data: DrawData):
+def get_window(win, data: DrawData, im):
     win.customize('Расчет подшипника на долговечность', (1200, 600))
     # Поля для черчения
     win.add_label_field('Начертить подшипник', (15, 10), 10)
@@ -84,7 +89,7 @@ def get_window(win, data: DrawData):
     win.add_data_field('r', 'r', 'мм', (30, 140), 30)
 
     win.add_button('Значения по умолчанию', win.set_data, (10, 350), 20)
-    win.add_button('Начертить подшипник', create_draw(win, data), (10, 380), 20)
+    win.add_button('Начертить подшипник', create_draw(win, data, im), (10, 380), 20)
     # Поля для расчета
     win.add_label_field('Рассчитать подшипник', (200, 10), 10)
     win.add_calc_field('C', 'C', ', кН', (220, 50), 30)

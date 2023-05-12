@@ -1,4 +1,4 @@
-__all__ = ['CustomWin', 'LabelWin', 'ButtonWin', 'DrawWin']
+__all__ = ['CustomWin', 'LabelWin', 'ButtonWin', 'DrawWin', 'get_image']
 
 
 import tkinter as tk
@@ -107,22 +107,29 @@ class DrawWin(CoreWin):
         self.canvas = tk.Canvas(bg="white", width=800, height=600)
         self.canvas.place(x=395, y=0)
 
-    def draw_line(self, *args, size=2) -> None:
+    def draw_line(self, *args, size=1) -> None:
         """Метод для рисования ломаной линии толщины size по координатам args"""
         self.canvas.create_line(*args, width=size)
 
-    def draw_rect(self, *args, size=2) -> None:
+    def draw_rect(self, *args, size=1) -> None:
         """Метод для рисования прямоугольника толщины size по координатам args"""
         self.canvas.create_rectangle(*args, width=size)
 
-    def draw_circle(self, *args, size=2) -> None:
+    def draw_circle(self, *args, size=1) -> None:
         """Метод для рисования окружности толщины size по координатам args"""
         self.canvas.create_oval(*args, width=size, fill='white')
 
-    def clear_place(self, *args, size=2):
+    def clear_place(self, *args, size=1):
         """Метод для удаления чертежа"""
         self.canvas.create_rectangle(*args, width=size, fill='white')
 
     def draw_polygon(self, *args, size=3, fill=True):
         """Метод для рисования окружности толщины size по координатам args"""
         self.canvas.create_polygon(*args, width=size, fill='white')
+
+    def draw_3d(self, x, y, image):
+        self.canvas.create_image(x, y, anchor='nw', image=image)
+
+
+def get_image(path):
+    return tk.PhotoImage(file=path, height=590, width=390)

@@ -23,7 +23,9 @@ def main(draw_data, calc_data):
 
     win = MyWin(data, calc)
     draw_plases(win)
-    get_window(win, data)
+
+    image = get_image('images/goal.png')
+    get_window(win, data, image)
     win()
 
 
