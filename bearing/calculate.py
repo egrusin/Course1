@@ -309,13 +309,16 @@ class DrawCoords:
             ans.append((x1, y1, x2, y2))
         return ans
 
-    def get_ficha(self):
+    def get_block(self):
         cent = self.get_center()
         up_lines = self.get_downinner_lines()[4:]
+        down_lines = self.get_downinner_lines()[:4]
         side1 = (up_lines[0] - 2, up_lines[1] - 2, up_lines[2], up_lines[3] - 2)
         y = cent[1] + self['d'] // 2 + self['S']
         side2 = (cent[0], y + 2, cent[0] + 0.5 * self['B'] - 2, y + 2)
-        return side1 + side2
+        side3 = (cent[0], y + 2, cent[0] + 0.5 * self['B'] - 2, y + 2,
+                 up_lines[0] - 2, cent[1] + self['D'] // 2 - self['r'])
+        return side1 + side2 if self['r'] <= 0.5 * self['S'] else side1 + side3
 
     def __getitem__(self, item):
         return float(self.data[item])

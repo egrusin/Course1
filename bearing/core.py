@@ -130,6 +130,10 @@ class DrawWin(CoreWin):
     def draw_3d(self, x, y, image):
         self.canvas.create_image(x, y, anchor='nw', image=image)
 
+    def draw_punctir(self, *args, size=1) -> None:
+        """Метод для рисования пунктирной линии толщины size по координатам args"""
+        self.canvas.create_line(*args, width=size, dash=5)
+
 
 def get_image(path):
     return tk.PhotoImage(file=path, height=590, width=390)

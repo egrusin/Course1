@@ -28,11 +28,6 @@ def create_draw(win: MyWin, data, im):
         # Рисуем внешний контур
         out_fig = coords.get_outer_polygon()
         win.draw_line(*(out_fig + out_fig[:2]), size=3)
-        # Рисуем осевую линию
-        win.draw_line(center[0] - 3, center[1], center[0] + 4, center[1], size=1)
-        win.draw_line(center[0], center[1] - 4, center[0], center[1] + 4, size=1)
-        win.draw_line(center[0] - 20 - coords['B'] // 2, center[1], center[0] - 5, center[1], size=1)
-        win.draw_line(center[0] + 6, center[1], center[0] + 20 + coords['B'] // 2, center[1], size=1)
         # Рисуем внутренний цилиндр
         in_cil = coords.get_inner_cilinder()
         win.draw_line(*(in_cil + in_cil[:2]), size=3)
@@ -65,15 +60,23 @@ def create_draw(win: MyWin, data, im):
         down_out_fill = coords.fill_down_rotor()  # Нижняя часть
         for i in down_out_fill:
             win.draw_line(*i, size=1)
-        win.draw_polygon(*coords.get_ficha(), size=5)
+        win.draw_polygon(*coords.get_block(), size=5)
         # Рисуем подшипники
         up_cir = coords.get_upcircle_params()
         win.draw_circle(*up_cir, size=3)
         down_cir = coords.get_downcircle_params()
         win.draw_circle(*down_cir, size=3)
         # Рисуем осевые линии
-        win.draw_line(center[0], center[1] - coords['D'] // 2 - coords['r'],
-                      center[0], center[1] + coords['D'] // 2 + coords['r'])
+        win.draw_punctir(center[0] - 3, center[1], center[0] + 4, center[1], size=1)
+        win.draw_punctir(center[0], center[1] - 4, center[0], center[1] + 4, size=1)
+        win.draw_punctir(center[0] - 20 - coords['B'] // 2, center[1], center[0] - 5, center[1], size=1)
+        win.draw_punctir(center[0] + 6, center[1], center[0] + 20 + coords['B'] // 2, center[1], size=1)
+        win.draw_punctir(center[0], center[1] - coords['D'] // 2 - coords['r'],
+                         center[0], center[1] + coords['D'] // 2 + coords['r'])
+        win.draw_punctir(center[0] - 0.5 * coords['Dw'] - 10, center[1] - 0.5 * coords['d1'],
+                         center[0] + 0.5 * coords['Dw'] + 10, center[1] - 0.5 * coords['d1'])
+        win.draw_punctir(center[0] - 0.5 * coords['Dw'] - 10, center[1] + 0.5 * coords['d1'],
+                         center[0] + 0.5 * coords['Dw'] + 10, center[1] + 0.5 * coords['d1'])
         # Добавляем 3d чертеж
         win.draw_3d(405, 5, im)
     return inner
