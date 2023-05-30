@@ -312,7 +312,6 @@ class DrawCoords:
     def get_block(self):
         cent = self.get_center()
         up_lines = self.get_downinner_lines()[4:]
-        down_lines = self.get_downinner_lines()[:4]
         side1 = (up_lines[0] - 2, up_lines[1] - 2, up_lines[2], up_lines[3] - 2)
         y = cent[1] + self['d'] // 2 + self['S']
         side2 = (cent[0], y + 2, cent[0] + 0.5 * self['B'] - 2, y + 2)

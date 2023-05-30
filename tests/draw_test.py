@@ -11,5 +11,3 @@ class DrawTest(unittest.TestCase):
 
     def test_calculate_3(self):
         self.assertEqual(DrawData(defaults_draw).d1, 33.5)
-
-
